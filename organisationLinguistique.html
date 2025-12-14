@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet - Organisation Linguistique | Mathéo Desprez</title>
+  <link rel="stylesheet" href="css/projet.css">
+</head>
+<body>
+  
+  <div class="stars-layer-1"></div>
+  <div class="stars-layer-2"></div>
+  <div class="stars-layer-3"></div>
+  <div class="stars-layer-4"></div> 
+
+  <section class="star-container">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </section>
+  
+  <main class="project-container">
+    
+    <h1>Organisation de séjours linguistiques</h1>
+    
+    <div class="project-details">
+      <div class="detail-item">
+        <i><strong>Création</strong></i>
+        <strong>avril - juin 2025</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Équipe</strong></i>
+        <strong>M.Desprez M.Ung C.Tison</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Language</strong></i>
+        <strong>Java 17, JavaFX</strong>
+      </div>
+    </div>
+
+    <section class="project-description">
+      <h2>Description du Projet</h2>
+      <p>
+        Ce projet consiste en la réalisation d’une application JavaFX destinée à faciliter le rapprochement entre étudiants hôtes et visiteurs dans le cadre d’échanges internationaux. 
+				L’objectif était de concevoir une interface claire, intuitive et agréable, centrée sur l’expérience utilisateur, tout en appliquant les principes fondamentaux du design IHM.
+      </p>
+      <p>
+        L’application permet de consulter un profil, rechercher des hôtes ou visiteurs selon différents critères, visualiser les degrés d’affinité via des barres de compatibilité, et naviguer facilement entre les différentes pages. 
+				Plusieurs mécaniques de sécurité ont été intégrées : vérification des actions sensibles (suppression de profil), prévention des erreurs utilisateur, messages d’avertissement et parcours guidé.
+      </p>
+			<p>
+        Le développement s’appuie sur JavaFX, une modélisation structurée des vues, et des maquettes Figma préalablement conçues. Une attention particulière a été portée à l’ergonomie : menus accessibles, éléments cohérents, retours visuels clairs, codes couleur pour l’affinité (rouge → incompatible, orange → moyenne, vert → compatible), et éléments interactifs comme sliders et barres de progression.
+      </p>
+      <p>
+        Le travail a été réparti entre les membres de l’équipe selon leurs compétences ::  
+      </p>
+      <ul>
+				<li>Développement JavaFX et intégration des interfaces (M.Desprez & M.Ung)</li>
+				<li>Création des données utilisateurs et assistance conception (C.Tison)</li>
+				<li>Réalisation commune des maquettes Figma, de la documentation et des décisions visuelle</li>
+			</ul>
+			<p>
+				Le projet a permis de mettre en œuvre des compétences en JavaFX, conception d’IHM, architecture multi-scènes, création de maquettes, interactions utilisateur et gestion d’événements. Le résultat est une application fonctionnelle, propre, cohérente et agréable à utiliser, pensée pour accompagner l’utilisateur dans chaque étape de son parcours.
+			</p>
+
+    <section class="gallery">
+      <h2>Galerie d'images</h2>
+      <div class="image-grid">
+        <img src="./img/echange_main.png" alt="Interface au lancement" />
+        <img src="./img/echange_profil.png" alt="écran de profil" />
+        <img src="./img/echange_settings.png" alt="paramètre des échange" />
+        <img src="./img/echange_stat.png" alt="comparaison de compatibilité" />
+      </div>
+    </section>
+
+    <section class="download-section">
+      <h2>Obtenir le Projet</h2>
+      <a href="projets/organisation-de-sejours-linguistiques.zip" class="download-btn" download>
+        Télécharger le Projet (ZIP)
+      </a>
+      <p><a href="https://gitlab.univ-lille.fr/cv_numerique/organisation-de-sejours-linguistiques" class="git-link"style="margin-top: 10px; opacity: 0.7;">Disponible aussi sur Git.</a></p>
+    </section>
+
+    <a href="index.html" class="back-link">
+        &larr; Retour au CV de Mathéo Desprez
+    </a>
+    
+  </main>
+  
+  <footer>
+    © 2025 – Desprez Mathéo | Organisation de séjours linguistiques
+  </footer>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="Zoom">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const images = document.querySelectorAll('.image-grid img');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>

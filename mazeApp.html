@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet - MazeApp | Mathéo Desprez</title>
+  <link rel="stylesheet" href="css/projet.css">
+</head>
+<body>
+  
+  <div class="stars-layer-1"></div>
+  <div class="stars-layer-2"></div>
+  <div class="stars-layer-3"></div>
+  <div class="stars-layer-4"></div> 
+
+  <section class="star-container">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </section>
+  
+  <main class="project-container">
+    
+    <h1>MazeApp - Générateur de Labyrinthes</h1>
+    
+    <div class="project-details">
+      <div class="detail-item">
+        <i><strong>Création</strong></i>
+        <strong>Octobre - Novembre 2025</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Équipe</strong></i>
+        <strong>M.Desprez M.Alvarez L.Treels U.Petillon</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Language</strong></i>
+        <strong>Java 17, JavaFX, CSS</strong>
+      </div>
+    </div>
+
+    <section class="project-description">
+      <h2>Description du Projet</h2>
+      <p>
+        MazeApp est une application Java mêlant génération de labyrinthes, interfaces graphiques et logique de jeu. 
+        Le joueur peut explorer différents types de labyrinthes (aléatoires, parfaits, division récursive), chacun généré par un algorithme spécifique avec différent types de vues (total, local, exploration). 
+      </p>
+      <p>
+        Le projet mobilise des compétences en Joo, JavaFX, modélisation MVC, gestion de scènes, algorithmes de parcours, et tests unitaires.
+        Nous avons également implémenté un système de sauvegarde, un mode progression, des paramètres personnalisés (taille, difficulté, distance minimale), ainsi qu’une interface utilisateur complète et modulable. 
+      </p>
+      <p>
+        L’objectif était de produire une application fonctionnelle, claire et évolutive, mêlant logique algorithmique et expérience utilisateur.
+      </p>
+    </section>
+
+    <section class="gallery">
+      <h2>Galerie d'images</h2>
+      <div class="image-grid">
+        <img src="./img/MazeApp_main.png" alt="Logo" />
+        <img src="./img/mazeApp_localView.png" alt="Résolution du labyrinthe avec vue local" />
+        <img src="./img/mazeApp_settings.png" alt="Vue de l'éditeur de paramètres" />
+        <img src="./img/mazeApp_BobView.png" alt="Interface utilisateur JavaFX" />
+      </div>
+    </section>
+
+    <section class="download-section">
+      <h2>Obtenir le Projet</h2>
+      <a href="projets/MazeApp.zip" class="download-btn" download>
+        Télécharger le Projet (ZIP)
+      </a>
+      <p><a href="https://gitlab.univ-lille.fr/cv_numerique/mazeapp#" class="git-link"style="margin-top: 10px; opacity: 0.7;">Disponible aussi sur Git.</a></p>
+    </section>
+
+    <a href="index.html" class="back-link">
+        &larr; Retour au CV de Mathéo Desprez
+    </a>
+    
+  </main>
+  
+  <footer>
+    © 2025 – Desprez Mathéo | MazeApp
+  </footer>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="Zoom">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const images = document.querySelectorAll('.image-grid img');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>

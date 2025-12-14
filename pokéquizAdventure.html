@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet - PokéQuiz Adventures | Mathéo Desprez</title>
+  <link rel="stylesheet" href="css/projet.css">
+</head>
+<body>
+  
+  <div class="stars-layer-1"></div>
+  <div class="stars-layer-2"></div>
+  <div class="stars-layer-3"></div>
+  <div class="stars-layer-4"></div> 
+
+  <section class="star-container">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </section>
+  
+  <main class="project-container">
+    
+    <h1>PokéQuiz Adventures - Jeux ludopédagogique</h1>
+    
+    <div class="project-details">
+      <div class="detail-item">
+        <i><strong>Création</strong></i>
+        <strong>Décembre - Janvier 2024-25</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Équipe</strong></i>
+        <strong>M.Desprez M.Ung</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Language</strong></i>
+        <strong>Java 17, JavaFX, CSS</strong>
+      </div>
+    </div>
+
+    <section class="project-description">
+      <h2>Description du Projet</h2>
+      <p>
+        PokéQuiz Adventures est un jeu en terminal mêlant quizz et aventure. 
+        Le joueur incarne un dresseur et son Pokémon, affrontant ennemis et obstacles à travers des questions de culture générale. Chaque réponse influence le jeu (soins, dégâts, etc.).
+      </p>
+      <p> 
+        Le projet a mobilisé nos compétences en IJava, organisation de code, gestion de fichiers, tests et réflexion algorithmique. 
+        Nous avons également mis en pratique notre créativité pour concevoir l’univers du jeu et optimiser son affichage en console. 
+      </p>
+      <p>
+        L'objectif était de produire un jeu complet, fonctionnel, modulable et inspiré d’une célèbre franchise tout en ajoutant des mécanismes originaux.
+      </p>
+    </section>
+
+    <section class="gallery">
+      <h2>Galerie d'images</h2>
+      <div class="image-grid">
+        <img src="./img/pokequiz_start.png" alt="Logo" />
+        <img src="./img/pokequiz_dialogue.png" alt="Affichage des dialogues" />
+        <img src="./img/pokequiz_fight.png" alt="Vue lors de combats tour par tour" />
+      </div>
+    </section>
+
+    <section class="download-section">
+      <h2>Obtenir le Projet</h2>
+      <a href="projets/pokeQuizAdventure.zip" class="download-btn" download>
+        Télécharger le Projet (ZIP)
+      </a>
+      <p><a href="https://gitlab.univ-lille.fr/cv_numerique/pokeQuizAdventure#" class="git-link"style="margin-top: 10px; opacity: 0.7;">Disponible aussi sur Git.</a></p>
+    </section>
+
+    <a href="index.html" class="back-link">
+        &larr; Retour au CV de Mathéo Desprez
+    </a>
+    
+  </main>
+  
+  <footer>
+    © 2025 – Desprez Mathéo | PokéQuiz Adventures
+  </footer>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="Zoom">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const images = document.querySelectorAll('.image-grid img');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>

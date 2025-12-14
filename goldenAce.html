@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet - GoldenAce | Mathéo Desprez</title>
+  <link rel="stylesheet" href="css/projet.css">
+</head>
+<body>
+  
+  <div class="stars-layer-1"></div>
+  <div class="stars-layer-2"></div>
+  <div class="stars-layer-3"></div>
+  <div class="stars-layer-4"></div> 
+
+  <section class="star-container">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </section>
+  
+  <main class="project-container">
+    
+    <h1>Golden Ace - Casino virtuel</h1>
+    
+    <div class="project-details">
+      <div class="detail-item">
+        <i><strong>Création</strong></i>
+        <strong>01-04 Septembre 2025</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Équipe</strong></i>
+        <strong>M.Desprez M.Ung L.Couraudon H.Straseele A.Stievenard A.Dochy</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Language</strong></i>
+        <strong>Java 17</strong>
+      </div>
+    </div>
+
+    <section class="project-description">
+      <h2>Description du Projet</h2>
+      <p>
+        AceCasino est une application Java simulant un véritable casino virtuel, jouable entièrement dans le terminal. 
+        Le projet regroupe plusieurs jeux emblématiques (machine à sous, roulette, blackjack, mastermind, jeu de mine), chacun doté de ses propres règles, systèmes de gain et mécaniques de mise. 
+        Les interactions se font via des saisies utilisateurs contrôlées, garantissant une expérience fluide et sans erreurs.
+      </p>
+      <p>
+        Le développement a été réalisé en Java 17, avec une architecture modulaire permettant d’ajouter ou d’améliorer facilement de nouveaux jeux. 
+        Une interface d’accueil centralisée donne accès à l’ensemble des activités du casino, et un système complet de gestion des crédits permet au joueur de miser, gagner et perdre de l’argent comme dans un vrai établissement de jeu.
+      </p>
+      <p>
+        Le projet inclut également :  
+      </p>
+      <ul>
+				<li>Un système de sauvegarde des joueurs (CSV), permettant de conserver nom, crédits et progression.</li>
+				<li>Plusieurs jeux entièrement fonctionnels : Machine à sous équilibrée, Roulette (V3), MineGame, Mastermind, Blackjack jouable.</li>
+				<li>Des animations textuelles pour améliorer le ressenti (rouleaux de la machine à sous, tirages, cartes affichées horizontalement).</li>
+				<li>Un travail important sur la fiabilité : filtrage des erreurs de saisie, gestion robuste de l’argent, cohérence des gains et des mises.</li>
+				<li>Une architecture pensée pour être lisible, évolutive et stable.</li>
+			</ul>
+
+    <section class="gallery">
+      <h2>Galerie d'images</h2>
+      <div class="image-grid">
+        <img src="./img/goldenAce_main.png" alt="Interface au lancement" />
+        <img src="./img/goldenAce_load.png" alt="écran de chargement" />
+        <img src="./img/goldenAce_Gamble.png" alt="Slot roulette" />
+        <img src="./img/goldenAce_result.png" alt="résultat de la slot roulette" />
+        <img src="./img/goldenAce_BlackJack.png" alt="Partie de blackjack" />
+      </div>
+    </section>
+
+    <section class="download-section">
+      <h2>Obtenir le Projet</h2>
+      <a href="projets/GoldenAce.zip" class="download-btn" download>
+        Télécharger le Projet (ZIP)
+      </a>
+      <p><a href="https://gitlab.univ-lille.fr/cv_numerique/goldenAce" class="git-link"style="margin-top: 10px; opacity: 0.7;">Disponible aussi sur Git.</a></p>
+    </section>
+
+    <a href="index.html" class="back-link">
+        &larr; Retour au CV de Mathéo Desprez
+    </a>
+    
+  </main>
+  
+  <footer>
+    © 2025 – Desprez Mathéo | Golden Ace
+  </footer>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="Zoom">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const images = document.querySelectorAll('.image-grid img');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>
