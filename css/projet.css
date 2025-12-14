@@ -1,0 +1,390 @@
+/* --- Background Style --- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #081126, #00010a);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* Couches d'étoiles */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+.stars-layer-1 {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -4; pointer-events: none;
+  background-image: 
+    radial-gradient(0.5px 0.5px at 1% 10%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 15% 35%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 25% 75%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 35% 25%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 45% 55%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 55% 95%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 60% 5%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 70% 30%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 80% 70%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 90% 90%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 50% 15%, rgba(255, 255, 255, 0.4), transparent),
+    radial-gradient(0.5px 0.5px at 20% 60%, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 100% 100%;
+}
+.stars-layer-2 {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3; pointer-events: none;
+  background-image: 
+    radial-gradient(1px 1px at 20vw 10vh, rgba(255, 255, 255, 0.6), transparent), 
+    radial-gradient(1px 1px at 40vw 30vh, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 60vw 70vh, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 80vw 20vh, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 10vw 50vh, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 25vw 80vh, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 70vw 90vh, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 90vw 60vh, rgba(255, 255, 255, 0.6), transparent);
+  background-size: 100% 100%;
+  animation: twinkle 6s infinite alternate;
+}
+.stars-layer-3 {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; pointer-events: none;
+  background-image: 
+    radial-gradient(1.5px 1.5px at 15vw 15vh, rgba(255, 255, 255, 0.8), transparent), 
+    radial-gradient(1.5px 1.5px at 35vw 65vh, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 55vw 25vh, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 75vw 45vh, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 5vw 90vh, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 95vw 10vh, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.5px 1.5px at 50vw 50vh, rgba(255, 255, 255, 0.8), transparent);
+  background-size: 100% 100%;
+  animation: twinkle 4s infinite alternate;
+}
+.stars-layer-4 {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
+  background-image: 
+    radial-gradient(2px 2px at 12vw 72vh, white, transparent), 
+    radial-gradient(2px 2px at 32vw 12vh, white, transparent),
+    radial-gradient(2px 2px at 62vw 32vh, white, transparent),
+    radial-gradient(2px 2px at 82vw 52vh, white, transparent),
+    radial-gradient(2px 2px at 22vw 22vh, white, transparent),
+    radial-gradient(2px 2px at 42vw 82vh, white, transparent),
+    radial-gradient(2px 2px at 72vw 62vh, white, transparent),
+    radial-gradient(2px 2px at 92vw 42vh, white, transparent);
+  background-size: 100% 100%;
+  animation: twinkle 3s infinite alternate;
+}
+
+/* empêche les étoiles filanted'agrandir la page */
+.star-container {
+  position: fixed; /* Reste fixe à l'écran */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* COUPE net les étoiles qui sortent de l'écran */
+  z-index: -1;
+  pointer-events: none; /* Permet de cliquer au travers */
+}
+
+span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px rgba(255,255,255,0.1),
+              0 0 0 8px rgba(255,255,255,0.1), 
+              0 0 20px rgba(255,255,255,1);
+  animation: animate 3s linear infinite;
+}
+
+span::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  height: 1px;
+  background: linear-gradient(90deg, #fff, transparent);
+}
+
+@keyframes animate {
+  0%
+  {
+    transform: rotate(315deg) translateX(0);
+    opacity: 1;
+  }
+  70%
+  {
+    opacity: 1;
+  }
+  100%
+  {
+    transform: rotate(315deg) translateX(-1500px);
+    opacity: 0;
+  }
+}
+
+span:nth-child(1)
+{
+  top: 0;
+  right: 0;
+  animation-delay: 4;
+  animation-duration: 2.8s;
+}
+span:nth-child(2)
+{
+  top: 0;
+  right: 80px;
+  left: initial;
+  animation-delay: 0.4;
+  animation-duration: 4s;
+}
+span:nth-child(3)
+{
+  top: 140px;
+  right: 0px;
+  left: initial;
+  animation-delay: 1;
+  animation-duration: 2s;
+}
+span:nth-child(4)
+{
+  top: 0px;
+  right: 180px;
+  left: initial;
+  animation-delay: 0.7;
+  animation-duration: 2.5s;
+}
+span:nth-child(5)
+{
+  top: 0px;
+  right: 450px;
+  left: initial;
+  animation-delay: 5;
+  animation-duration: 1.8s;
+}
+span:nth-child(6)
+{
+  top: 0px;
+  right: 600px;
+  left: initial;
+  animation-delay: 3;
+  animation-duration: 5s;
+}
+span:nth-child(7)
+{
+  top: 300px;
+  right: 0px;
+  left: initial;
+  animation-delay: 4;
+  animation-duration: 4s;
+}
+span:nth-child(8)
+{
+  top: 600px;
+  right: 0px;
+  left: initial;
+  animation-delay: 8;
+  animation-duration: 2.75s;
+}
+span:nth-child(9)
+{
+  top: 1000px;
+  right: 0px;
+  left: initial;
+  animation-delay: 4;
+  animation-duration: 2.5s;
+}
+span:nth-child(10)
+{
+  top: 0px;
+  right: 800px;
+  left: initial;
+  animation-delay: 6;
+  animation-duration: 2s;
+}
+span:nth-child(11)
+{
+  top: 850px;
+  right: 0px;
+  left: initial;
+  animation-delay: 11;
+  animation-duration: 3s;
+}
+span:nth-child(12)
+{
+  top: 1100px;
+  right: 0px;
+  left: initial;
+  animation-delay: 8;
+  animation-duration: 3.5s;
+}
+
+/* --- Project Detail --- */
+
+/* Conteneur principal */
+.project-container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  position: relative;
+  z-index: 1; 
+}
+
+/* Titre */
+.project-container h1 {
+  font-size: 2.5em;
+  text-align: center;
+  color: #a3e6ff;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Bloc créateur, date, language */
+.project-details {
+  display: flex;
+  justify-content: space-around;
+  padding: 15px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 30px;
+}
+
+.detail-item {
+  text-align: center;
+}
+
+.detail-item {
+  display: block;
+  font-size: 1.1em;
+  color: #fff;
+}
+
+.detail-item span {
+  opacity: 0.7;
+  font-size: 0.9em;
+}
+
+i > strong {
+  display: block;
+  font-size: 1.1em;
+  color: #c7eefc;
+  margin-bottom: 10px;
+}
+
+/* Section description */
+.project-description h2, .gallery h2 {
+    color: #a3e6ff;
+    border-bottom: 2px solid rgba(163, 230, 255, 0.3);
+    padding-bottom: 5px;
+    margin-top: 40px;
+}
+
+/* Galerie d'images */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.image-grid img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  transition: transform 0.3s ease;
+  cursor: zoom-in;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.image-grid img:hover {
+    transform: scale(1.05);
+}
+
+#lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#lightbox.active {
+  display: flex;
+}
+
+#lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 5px;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  transform: scale(1);
+}
+
+/* Bouton Téléchargement */
+.download-section {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.download-btn {
+  display: inline-block;
+  background: linear-gradient(90deg, #1e90ff, #00bfff); 
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+}
+
+.download-btn:hover {
+  background: linear-gradient(90deg, #00bfff, #1e90ff);
+  transform: translateY(-2px);
+}
+
+/* Lien GIT */
+.git-link {
+    display: block;
+    margin-top: 40px;
+    text-align: center;
+    color: #6d21ac;
+    opacity: 0.7;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.git-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/*Lien main CV*/
+.back-link {
+    display: block;
+    margin-top: 40px;
+    text-align: center;
+    color: #fff;
+    opacity: 0.7;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.back-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
