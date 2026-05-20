@@ -249,23 +249,33 @@
 
   <section class="section" id="projets">
     <h2>Projets</h2>
-    <div style="position: relative;">
-      
-      <button id="proj-left" style="position:absolute; left:-40px; top:40%; font-size:40px; background:none; border:none; color:white; cursor:pointer; z-index:10;">&#x276E;</button>
-      <button id="proj-right" style="position:absolute; right:-40px; top:40%; font-size:40px; background:none; border:none; color:white; cursor:pointer; z-index:10;">&#x276F;</button>
-      
+    <div class="projets-wrapper">
+
+      <button id="proj-left" class="proj-nav proj-nav-left" aria-label="Projet précédent">&#x276E;</button>
+      <button id="proj-right" class="proj-nav proj-nav-right" aria-label="Projet suivant">&#x276F;</button>
+
       <div class="projets-container" id="projets-slider">
 
         <div class="projet">
           <a href="NIRA.html" class="lien_projet">
+            <div class="tech-badges">                                                                                                                                                                                                                   
+              <div class="tech-badge" title="Python"><img src="./img/logo_python.png" alt="Python" /></div>
+              <div class="tech-badge" title="LangChain"><img src="./img/logo_langChain.png" alt="LangChain" /></div>
+              <div class="tech-badge" title="React"><img src="./img/logo_react.png" alt="React" /></div>
+            </div>
             <img src="./img/NIRA_logo.png" />
             <p>NIRA</p>
-            <p class="description">Avril - Juin 2025</p>
+            <p class="description">Avril - Juin 2026</p>
           </a>
         </div>
 
         <div class="projet">
           <a href="mazeApp.html" class="lien_projet">
+            <div class="tech-badges">                                                                                                                                                                                                                   
+              <div class="tech-badge" title="Java"><img src="./img/logo_java.png" alt="Java" /></div>
+              <div class="tech-badge" title="JavaFX"><img src="./img/logo_javaFX.png" alt="JavaFX" /></div>
+              <div class="tech-badge" title="CSS"><img src="./img/logo_CSS.png" alt="CSS" /></div>
+            </div>
             <img src="./img/MazeApp_main.png" />
             <p>MazeApp</p>
             <p class="description">Octobre - Novembre 2025</p>
@@ -274,6 +284,9 @@
 
         <div class="projet">
           <a href="goldenAce.html" class="lien_projet">
+            <div class="tech-badges">
+              <div class="tech-badge" title="Java"><img src="./img/logo_java.png" alt="Java" /></div>
+            </div>
             <img src="./img/goldenAce_logo.png" />
             <p>Ace Casino</p>
             <p class="description">01-04 Septembre 2025</p>
@@ -282,6 +295,10 @@
 
         <div class="projet">
           <a href="organisationLinguistique.html" class="lien_projet">
+            <div class="tech-badges">
+              <div class="tech-badge" title="Java"><img src="./img/logo_java.png" alt="Java" /></div>
+              <div class="tech-badge" title="JavaFX"><img src="./img/logo_javaFX.png" alt="JavaFX" /></div>
+            </div>
             <img src="./img/echange_main.png" />
             <p>organisation de séjour linguistique</p>
             <p class="description">avril-juin 2025</p>
@@ -290,6 +307,9 @@
 
         <div class="projet">
           <a href="pokéquizAdventure.html" class="lien_projet">
+            <div class="tech-badges">
+              <div class="tech-badge" title="Java"><img src="./img/logo_java.png" alt="Java" /></div>
+            </div>
             <img src="./img/pokeQuizAdventures_logo.png" />
             <p>PokéQuizAdventure</p>
             <p class="description">Décembre - Janvier 2024-25</p>
@@ -306,9 +326,126 @@
 
     <script>
       const container = document.getElementById('projets-slider');
-      
-      document.getElementById('proj-left').onclick = () => container.scrollBy({ left: -300, behavior: 'smooth' });
-      document.getElementById('proj-right').onclick = () => container.scrollBy({ left: 300,  behavior: 'smooth' });
+      const wrapperProjets = document.querySelector('.projets-wrapper');
+
+      // piste : on enveloppe les cartes (pas de duplication)
+      const piste = document.createElement('div');
+      piste.className = 'projets-track';
+      while (container.firstChild) piste.appendChild(container.firstChild);
+      container.appendChild(piste);
+
+      // borne droite : combien on peut translater avant que la dernière carte touche le bord
+      let positionMax = 0;
+      const mesurer = () => {
+        positionMax = Math.max(0, piste.scrollWidth - container.clientWidth);
+      };
+      window.addEventListener('load', mesurer);
+      window.addEventListener('resize', mesurer);
+      mesurer();
+
+      // état + position
+      let position = 0;
+      let etat = 'attente';      // 'attente' | 'scroll' | 'rewind'
+      let pauseHover = false;
+      let timerAttente = null;
+      let rewindT0 = 0;
+      let rewindDepart = 0;
+      const vitesse = 0.4;       // pixels par frame
+      const dureeRewind = 700;   // ms
+      const dureeAttente = 5000; // ms
+
+      const appliquer = () => {
+        piste.style.transform = `translate3d(${-position}px, 0, 0)`;
+      };
+
+      function passerEnAttente() {
+        etat = 'attente';
+        position = 0;
+        appliquer();
+        timerAttente = setTimeout(() => {
+          timerAttente = null;
+          etat = 'scroll';
+        }, dureeAttente);
+      }
+
+      function passerEnRewind() {
+        etat = 'rewind';
+        rewindT0 = performance.now();
+        rewindDepart = position;
+      }
+
+      function boucle(now) {
+        if (!pauseHover) {
+          if (etat === 'scroll') {
+            position += vitesse;
+            if (position >= positionMax) {
+              position = positionMax;
+              passerEnRewind();
+            }
+            appliquer();
+          } else if (etat === 'rewind') {
+            const p = Math.min(1, (now - rewindT0) / dureeRewind);
+            const e = 1 - Math.pow(1 - p, 3);
+            position = rewindDepart * (1 - e);
+            appliquer();
+            if (p >= 1) {
+              position = 0;
+              passerEnAttente();
+            }
+          }
+          // 'attente' : on laisse le setTimeout gérer la transition
+        }
+        requestAnimationFrame(boucle);
+      }
+
+      appliquer();
+      passerEnAttente();
+      requestAnimationFrame(boucle);
+
+      // pause au survol : on gèle tout, on annule l'attente en cours et on la relancera à la sortie
+      wrapperProjets.addEventListener('mouseenter', () => {
+        pauseHover = true;
+        if (timerAttente) {
+          clearTimeout(timerAttente);
+          timerAttente = null;
+        }
+      });
+      wrapperProjets.addEventListener('mouseleave', () => {
+        pauseHover = false;
+        if (etat === 'attente' && !timerAttente) {
+          timerAttente = setTimeout(() => {
+            timerAttente = null;
+            etat = 'scroll';
+          }, dureeAttente);
+        }
+      });
+
+      // flèches : glissement doux par tween, clamp [0, positionMax]
+      function glisser(delta) {
+        if (timerAttente) { clearTimeout(timerAttente); timerAttente = null; }
+        const debut = position;
+        const cible = Math.max(0, Math.min(positionMax, debut + delta));
+        const duree = 450;
+        const t0 = performance.now();
+        const etatPrecedent = etat;
+        etat = 'manuel';
+        function tween(now) {
+          const p = Math.min(1, (now - t0) / duree);
+          const e = 1 - Math.pow(1 - p, 3);
+          position = debut + (cible - debut) * e;
+          appliquer();
+          if (p < 1) {
+            requestAnimationFrame(tween);
+          } else {
+            // reprise du cycle automatique à partir de la position courante
+            etat = (position >= positionMax) ? 'rewind' : 'scroll';
+            if (etat === 'rewind') passerEnRewind();
+          }
+        }
+        requestAnimationFrame(tween);
+      }
+      document.getElementById('proj-left').onclick  = () => glisser(-270);
+      document.getElementById('proj-right').onclick = () => glisser(270);
     </script>
   </section>
 
