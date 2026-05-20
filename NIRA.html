@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projet - NIRA | Mathéo Desprez</title>
+  <link rel="stylesheet" href="css/projet.css">
+  <style>
+    /* Encart de confidentialité — spécifique à cette page (projet client) */
+    .confidential-notice {
+      margin-top: 50px;
+      padding: 25px 30px;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-left: 4px solid #f59e0b;
+      background: rgba(245, 158, 11, 0.06);
+      border-radius: 12px;
+      color: #ffe9bf;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+    .confidential-notice h3 {
+      margin: 0 0 10px 0;
+      color: #ffd27a;
+      font-size: 1.2em;
+    }
+    .confidential-notice p {
+      margin: 6px 0;
+      line-height: 1.5;
+      opacity: 0.92;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars-layer-1"></div>
+  <div class="stars-layer-2"></div>
+  <div class="stars-layer-3"></div>
+  <div class="stars-layer-4"></div>
+
+  <section class="star-container">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </section>
+
+  <main class="project-container">
+
+    <h1>NIRA - Navigateur Intelligent de Résolution Assistée</h1>
+
+    <div class="project-details">
+      <div class="detail-item">
+        <i><strong>Création</strong></i>
+        <strong>Avril - Juin 2026</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Contexte</strong></i>
+        <strong>Stage chez Consort</strong>
+      </div>
+      <div class="detail-item">
+        <i><strong>Technologies</strong></i>
+        <strong>Python, FastAPI, LangGraph, FAISS <small style="opacity:0.55; font-weight:normal;">· React</small></strong>
+      </div>
+    </div>
+
+    <section class="project-description">
+      <h2>Description du Projet</h2>
+      <p>
+        NIRA est une plateforme d'assistance à la résolution de tickets d'incidents.
+        L'objectif est d'aider les techniciens de supervision à traiter plus rapidement
+        les tickets en leur proposant automatiquement des pistes de résolution issues
+        de cas similaires déjà résolus dans le passé.
+      </p>
+      <p>
+        Ce projet a était réalisé dans le cadre de ma deuxième années en BUT Informatique, lors d'un stage de 3 mois chez Consort.
+        Il fût sous la supervision de mon tuteur de stage et d'autre salariés de l'entreprise (Stephane Huret, David Nowak, Gregory Fourez)
+      </p>
+      <p>
+        Le principe est simple : lorsqu'un nouveau ticket arrive, NIRA cherche dans son
+        historique les tickets qui ressemblent le plus à celui-ci, puis génère une suggestion de résolution claire et synthétique. 
+        Le technicien garde la main et peut, s'il le souhaite, injecter directement cette suggestion dans l'outil de ticketing et de transmettre un avis sur l'expérience de suggestion reçue.
+      </p>
+      <p>
+        Une page a été dédiée, hors navigation principale, afin d'exposer les statistiques sur la durée choisie : Semaine /Mois / All time. 
+        Elle affiche trois données récapitulatives sur la période sélectionnée : nombre d'avis total, note moyenne de l'ensemble des avis et taux d'injection. 
+        Ainsi qu'un graphique linéaire avec courbes lissées
+      </p>
+      <p>
+        Techniquement, les tickets résolus sont nettoyés puis transformés en vecteurs
+        d'embeddings indexés dans <strong>FAISS</strong>, ce qui permet une recherche sémantique par similarité rapide et efficace. 
+        Les suggestions de résolution sont ensuite générées par un LLM (GPT-4o ou Gemini selon les préférences) 
+        à partir des cas similaires retrouvés, le tout orchestré via des agents <strong>LangGraph</strong>.
+      </p>
+      <p>
+        Le projet a été pensé pour s'étendre facilement à plusieurs types d'incidents(espace disque, CPU, mémoire, etc.) 
+        et propose une interface web permettant d'ingérer un historique de tickets, de configurer les modèles utilisés et de visualiser les suggestions générées.
+      </p>
+    </section>
+
+    <section class="gallery">
+      <h2>Galerie d'images</h2>
+      <div class="image-grid">
+        <img src="./img/NIRA_logo.png" alt="Logo" />
+        <img src="./img/NIRA_ingestionView.png" alt="Vue d'ingestion" />
+        <img src="./img/NIRA_searchView.png" alt="Vue de recherche" />
+        <img src="./img/NIRA_suggestionView.png" alt="Vue de suggestion" />
+        <img src="./img/NIRA_avisView.png" alt="Vue d'avis" />
+        <img src="./img/NIRA_configView.png" alt="Vue de configuration" />
+        <img src="./img/NIRA_feedbackView.png" alt="Vue de feedback" />
+      </div>
+    </section>
+
+    <section class="confidential-notice">
+      <h3>Code source et livrables non publics</h3>
+      <p>
+        NIRA a été développé dans le cadre d'un projet d'entreprise pour un client.
+        Le code source, les données et l'application déployée restent la propriété
+        de Consort et de son client : ils ne peuvent donc pas être diffusés ni mis
+        à disposition au téléchargement sur ce CV.
+      </p>
+      <p>
+        Pour toute précision technique ou pour discuter de ce projet
+        dans un cadre professionnel, n'hésitez pas à me contacter directement.
+      </p>
+    </section>
+
+    <a href="index.html" class="back-link">
+        &larr; Retour au CV de Mathéo Desprez
+    </a>
+
+  </main>
+
+  <footer>
+    © 2026 – Desprez Mathéo | NIRA
+  </footer>
+
+  <div id="lightbox">
+    <img id="lightbox-img" src="" alt="Zoom">
+  </div>
+
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const images = document.querySelectorAll('.image-grid img');
+
+    images.forEach(img => {
+      img.addEventListener('click', () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('active');
+      });
+    });
+
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+    });
+  </script>
+
+</body>
+</html>
