@@ -305,7 +305,7 @@ header {
 }
 
 .parcoursTitle {
-  margin-top: -5%;
+  margin-top: -1%;
 }
 
 .parcoursBot {
@@ -940,7 +940,7 @@ html {
   transform: scale(1.15);
 }
 
-/* Bandeau techno (logos en haut de la carte) */
+/* Bandeau techno (zone des badge) */
 .tech-badges {
   display: flex;
   gap: 8px;
@@ -950,7 +950,7 @@ html {
   z-index: 2;
 }
 
-/* Conteneur invisible (juste de l'espace) */
+/* Conteneur invisible (zone du badge) */
 .tech-badge {
   width: 28px;
   height: 28px;
@@ -988,7 +988,7 @@ html {
   transform: translateY(-6px);
 }
 
-/* Évitement : les voisins s'écartent */
+/* voisins s'écartent */
 .tech-badge:hover ~ .tech-badge {
   transform: translateX(7px);
 }
@@ -996,7 +996,7 @@ html {
   transform: translateX(-7px);
 }
 
-/* Carte "En cours" (sans lien) : tout centrer vertical + horizontal */
+/* Carte "En cours" : centrer vertical + horizontal */
 .projet:not(:has(.lien_projet)) {
   display: flex;
   flex-direction: column;

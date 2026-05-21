@@ -64,9 +64,10 @@
     <div style="flex:60%;">
       <h2>À propos de moi</h2>
       <p>
-      Étudiant en 2ᵉ année en BUT Informatique à Villeneuve-d’Ascq, 
-      je recherche un stage de 10 semaines pour le printemps 2026 de préférence dans les domaines des réseaux, 
-      de l’administration système ou de la cybersécurité, afin de développer mes compétences et découvrir le monde professionnel.
+      Étudiant en 2ᵉ année de BUT Informatique à Villeneuve-d’Ascq, j'adore comprendre comment fonctionnent les infrastructures technologiques derrière les écrans ou composants. 
+      Particulièrement attiré par les réseaux, l'administration système ou la cybersécurité, 
+      mon objectif est de consolider mes compétences techniques (administration de serveurs Linux - configuration réseaux - scripting (Bash) - Développement Web / logiciel). 
+      Curieux de nature, j'apprécie d'analyser la logique des systèmes informatiques et de comprendre la communication entre les différents éléments d'un réseau ou physique.
       </p>
     </div>
     <div style="flex:30%;">
@@ -328,13 +329,13 @@
       const container = document.getElementById('projets-slider');
       const wrapperProjets = document.querySelector('.projets-wrapper');
 
-      // piste : on enveloppe les cartes (pas de duplication)
+      // piste qui défile
       const piste = document.createElement('div');
       piste.className = 'projets-track';
       while (container.firstChild) piste.appendChild(container.firstChild);
       container.appendChild(piste);
 
-      // borne droite : combien on peut translater avant que la dernière carte touche le bord
+      // borne droite copt de dernier projet
       let positionMax = 0;
       const mesurer = () => {
         positionMax = Math.max(0, piste.scrollWidth - container.clientWidth);
@@ -352,7 +353,7 @@
       let rewindDepart = 0;
       const vitesse = 0.4;       // pixels par frame
       const dureeRewind = 700;   // ms
-      const dureeAttente = 5000; // ms
+      const dureeAttente = 5000; // ms d'attente avant lancement
 
       const appliquer = () => {
         piste.style.transform = `translate3d(${-position}px, 0, 0)`;
@@ -402,7 +403,7 @@
       passerEnAttente();
       requestAnimationFrame(boucle);
 
-      // pause au survol : on gèle tout, on annule l'attente en cours et on la relancera à la sortie
+      // pause au survol : on gèle tout, on annule l'attente en cours et on la relancera si fin hover
       wrapperProjets.addEventListener('mouseenter', () => {
         pauseHover = true;
         if (timerAttente) {
@@ -420,7 +421,7 @@
         }
       });
 
-      // flèches : glissement doux par tween, clamp [0, positionMax]
+      // flèches : glissement doux de 270px (largeur d'un projet) dans la direction voulue, avec interruption de l'animation en cours et reprise du cycle auto à la fin du glissement
       function glisser(delta) {
         if (timerAttente) { clearTimeout(timerAttente); timerAttente = null; }
         const debut = position;
@@ -437,7 +438,7 @@
           if (p < 1) {
             requestAnimationFrame(tween);
           } else {
-            // reprise du cycle automatique à partir de la position courante
+            // reprise cycle auto à partir de la position actuellement freeze
             etat = (position >= positionMax) ? 'rewind' : 'scroll';
             if (etat === 'rewind') passerEnRewind();
           }
