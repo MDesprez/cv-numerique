@@ -5,6 +5,72 @@
 (function () {
   'use strict';
 
+  // ---------- Supabase (leaderboard) ----------
+  const SUPABASE_URL = 'https://hfsrohoomlrrswvxqgpm.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhmc3JvaG9vbWxycnN3dnhxZ3BtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NjU5NDksImV4cCI6MjA5NTQ0MTk0OX0.gVL9p3kR-CIErPFdU__F-dLAZU5dkuz7YqwYdM9glM8';
+  const LB_TABLE = 'leo_leaderboard';
+
+  async function submitScore(pseudo, score, timeSeconds, levelReached) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${LB_TABLE}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        pseudo: pseudo.slice(0, 12),
+        score: Math.max(0, Math.floor(score)),
+        time_seconds: Math.max(0, Math.floor(timeSeconds)),
+        level_reached: Math.max(1, Math.floor(levelReached)),
+      }),
+    });
+    if (!res.ok) throw new Error('Erreur Supabase ' + res.status);
+  }
+
+  async function fetchTop(limit = 100) {
+    const url = `${SUPABASE_URL}/rest/v1/${LB_TABLE}?select=pseudo,score,time_seconds,level_reached,created_at&order=score.desc,time_seconds.asc&limit=${limit}`;
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+    });
+    if (!res.ok) throw new Error('Erreur Supabase ' + res.status);
+    return res.json();
+  }
+
+  function fmtTime(sec) {
+    const mm = String(Math.floor(sec / 60)).padStart(2, '0');
+    const ss = String(sec % 60).padStart(2, '0');
+    return `${mm}:${ss}`;
+  }
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  function renderLeaderboardRows(rows, highlight) {
+    if (!rows || rows.length === 0) {
+      return `<div class="leo-lb-empty">Aucun score pour le moment — sois le premier !</div>`;
+    }
+    return rows.map((r, i) => {
+      const rank = i + 1;
+      const isHL = highlight && r.pseudo === highlight.pseudo && r.score === highlight.score && r.time_seconds === highlight.timeSeconds;
+      const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
+      return `<div class="leo-lb-row${isHL ? ' me' : ''}">
+        <span class="leo-lb-rank">${medal}</span>
+        <span class="leo-lb-pseudo">${escapeHTML(r.pseudo)}</span>
+        <span class="leo-lb-score">${r.score.toLocaleString('fr-FR')}</span>
+        <span class="leo-lb-time">${fmtTime(r.time_seconds)}</span>
+        <span class="leo-lb-lvl">Lv ${r.level_reached}</span>
+      </div>`;
+    }).join('');
+  }
+
   // ---------- Détection de la séquence "leo" ----------
   const SEQUENCE = 'leo';
   let keyBuffer = '';
@@ -96,6 +162,7 @@
         </div>
         <p class="leo-cta">Appuyer sur ESPACE pour démarrer</p>
         <button class="leo-rules-btn" id="leo-rules-btn" title="Afficher les règles (H)">📖 Règles (H)</button>
+        <button class="leo-lb-btn" id="leo-lb-btn" title="Voir le classement">🏆 Classement</button>
       </div>
       <div class="leo-rules" id="leo-rules" style="display:none;">
         <div class="leo-rules-inner">
@@ -188,6 +255,7 @@
     };
     overlay.querySelector('#leo-rules-btn').addEventListener('click', toggleRules);
     overlay.querySelector('#leo-rules-close').addEventListener('click', toggleRules);
+    overlay.querySelector('#leo-lb-btn').addEventListener('click', () => openLeaderboard(overlay));
 
     const canvas = document.getElementById('leo-canvas');
     const ctx = canvas.getContext('2d');
@@ -215,6 +283,39 @@
     if (ov) ov.remove();
     document.body.style.overflow = '';
     gameInstance = null;
+  }
+
+  // ---------- Écran leaderboard (depuis le menu d'accueil) ----------
+  async function openLeaderboard(overlay) {
+    let panel = overlay.querySelector('#leo-lb-panel');
+    if (panel) { panel.remove(); }
+    panel = document.createElement('div');
+    panel.id = 'leo-lb-panel';
+    panel.className = 'leo-lb-panel';
+    panel.innerHTML = `
+      <div class="leo-lb-inner">
+        <button class="leo-lb-close" title="Fermer">✕</button>
+        <h2>🏆 CLASSEMENT — TOP 100</h2>
+        <div class="leo-lb-head">
+          <span class="leo-lb-rank">#</span>
+          <span class="leo-lb-pseudo">Pseudo</span>
+          <span class="leo-lb-score">Score</span>
+          <span class="leo-lb-time">Temps</span>
+          <span class="leo-lb-lvl">Niv.</span>
+        </div>
+        <div class="leo-lb-list" id="leo-lb-list">
+          <div class="leo-lb-loading">Chargement…</div>
+        </div>
+      </div>
+    `;
+    overlay.appendChild(panel);
+    panel.querySelector('.leo-lb-close').addEventListener('click', () => panel.remove());
+    try {
+      const rows = await fetchTop(100);
+      panel.querySelector('#leo-lb-list').innerHTML = renderLeaderboardRows(rows);
+    } catch (err) {
+      panel.querySelector('#leo-lb-list').innerHTML = `<div class="leo-lb-empty">Impossible de charger le classement.</div>`;
+    }
   }
 
   // ---------- Game ----------
@@ -837,11 +938,20 @@
       const secs = Math.floor(this.elapsed / 1000);
       const mm = String(Math.floor(secs / 60)).padStart(2, '0');
       const ss = String(secs % 60).padStart(2, '0');
+      const savedPseudo = (() => { try { return localStorage.getItem('leoPseudo') || ''; } catch (_) { return ''; } })();
       const extra = `
         <p style="margin-top:20px;">Score final : <b style="color:#00e5ff;">${this.score}</b></p>
         <p>Temps de survie : <b style="color:#00e5ff;">${mm}:${ss}</b></p>
         <p>Niveau atteint : <b style="color:#00e5ff;">${this.difficulty}</b></p>
-        <p class="leo-cta" style="margin-top:24px;">R pour rejouer — ÉCHAP pour quitter</p>
+        <div class="leo-submit" id="leo-submit">
+          <label for="leo-pseudo">Ton pseudo (max 12) :</label>
+          <div class="leo-submit-row">
+            <input type="text" id="leo-pseudo" maxlength="12" placeholder="PILOTE" value="${escapeHTML(savedPseudo)}" autocomplete="off">
+            <button id="leo-submit-btn">Enregistrer mon score</button>
+          </div>
+          <p class="leo-submit-msg" id="leo-submit-msg"></p>
+        </div>
+        <p class="leo-cta" style="margin-top:18px;">R pour rejouer — ÉCHAP pour quitter</p>
         <div class="leo-credit">
           <span class="leo-credit-line"></span>
           <p>✦ Easter egg conçu &amp; développé par <b>Mathéo Desprez</b> ✦</p>
@@ -849,6 +959,76 @@
         </div>
       `;
       this.showOverlayScreen('over', 'GAME OVER', 'Ta mission s\'arrête ici.', extra);
+
+      const input = document.getElementById('leo-pseudo');
+      const btn = document.getElementById('leo-submit-btn');
+      const msg = document.getElementById('leo-submit-msg');
+      const score = this.score;
+      const timeSeconds = secs;
+      const lvl = this.difficulty;
+      const overlay = this.overlay;
+
+      // empêche que la touche R/ESPACE soit captée pendant la saisie
+      if (input) {
+        input.addEventListener('keydown', (e) => e.stopPropagation());
+      }
+
+      const onSubmit = async () => {
+        const pseudo = (input.value || '').trim();
+        if (pseudo.length < 1) {
+          msg.textContent = 'Entre un pseudo (1 à 12 caractères).';
+          msg.className = 'leo-submit-msg err';
+          return;
+        }
+        btn.disabled = true;
+        msg.textContent = 'Envoi…';
+        msg.className = 'leo-submit-msg';
+        try {
+          await submitScore(pseudo, score, timeSeconds, lvl);
+          try { localStorage.setItem('leoPseudo', pseudo); } catch (_) {}
+          msg.textContent = 'Score enregistré !';
+          msg.className = 'leo-submit-msg ok';
+          // ouvre le classement avec la ligne du joueur surlignée
+          const panel = document.createElement('div');
+          panel.id = 'leo-lb-panel';
+          panel.className = 'leo-lb-panel';
+          panel.innerHTML = `
+            <div class="leo-lb-inner">
+              <button class="leo-lb-close" title="Fermer">✕</button>
+              <h2>🏆 CLASSEMENT — TOP 100</h2>
+              <div class="leo-lb-head">
+                <span class="leo-lb-rank">#</span>
+                <span class="leo-lb-pseudo">Pseudo</span>
+                <span class="leo-lb-score">Score</span>
+                <span class="leo-lb-time">Temps</span>
+                <span class="leo-lb-lvl">Niv.</span>
+              </div>
+              <div class="leo-lb-list" id="leo-lb-list">
+                <div class="leo-lb-loading">Chargement…</div>
+              </div>
+            </div>
+          `;
+          overlay.appendChild(panel);
+          panel.querySelector('.leo-lb-close').addEventListener('click', () => panel.remove());
+          try {
+            const rows = await fetchTop(100);
+            panel.querySelector('#leo-lb-list').innerHTML = renderLeaderboardRows(rows, { pseudo, score, timeSeconds });
+            // auto-scroll vers ma ligne si présente
+            const me = panel.querySelector('.leo-lb-row.me');
+            if (me) me.scrollIntoView({ block: 'center' });
+          } catch (_) {
+            panel.querySelector('#leo-lb-list').innerHTML = `<div class="leo-lb-empty">Impossible de charger le classement.</div>`;
+          }
+        } catch (err) {
+          msg.textContent = 'Erreur d\'envoi. Réessaie.';
+          msg.className = 'leo-submit-msg err';
+          btn.disabled = false;
+        }
+      };
+      if (btn) btn.addEventListener('click', onSubmit);
+      if (input) input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); onSubmit(); }
+      });
     }
 
     updateHUD() {

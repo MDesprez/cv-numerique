@@ -375,3 +375,205 @@
   text-align: center;
   padding: 30px;
 }
+
+/* ===== Leaderboard ===== */
+#leo-game-overlay .leo-lb-btn {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  background: rgba(255, 200, 0, 0.15);
+  border: 1px solid rgba(255, 200, 0, 0.55);
+  color: #ffd24a;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  text-shadow: 0 0 6px rgba(255, 180, 0, 0.6);
+  transition: background 0.2s;
+  font-family: inherit;
+}
+#leo-game-overlay .leo-lb-btn:hover {
+  background: rgba(255, 200, 0, 0.3);
+}
+
+#leo-game-overlay .leo-lb-panel {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 20, 0.9);
+  padding: 20px;
+}
+#leo-game-overlay .leo-lb-inner {
+  position: relative;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 10, 40, 0.95);
+  border: 1px solid rgba(0, 200, 255, 0.4);
+  border-radius: 10px;
+  padding: 24px 28px 20px;
+  box-shadow: 0 0 40px rgba(0, 200, 255, 0.25);
+}
+#leo-game-overlay .leo-lb-inner h2 {
+  margin: 0 0 16px;
+  font-size: 22px;
+  color: #ffd24a;
+  text-shadow: 0 0 12px rgba(255, 180, 0, 0.5);
+  text-align: center;
+  letter-spacing: 2px;
+}
+#leo-game-overlay .leo-lb-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 50%;
+}
+#leo-game-overlay .leo-lb-close:hover {
+  background: rgba(255, 80, 80, 0.4);
+}
+#leo-game-overlay .leo-lb-head,
+#leo-game-overlay .leo-lb-row {
+  display: grid;
+  grid-template-columns: 56px 1fr 100px 80px 70px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+#leo-game-overlay .leo-lb-head {
+  color: #aaccff;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 200, 255, 0.3);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+#leo-game-overlay .leo-lb-list {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 200, 255, 0.5) transparent;
+}
+#leo-game-overlay .leo-lb-list::-webkit-scrollbar { width: 8px; }
+#leo-game-overlay .leo-lb-list::-webkit-scrollbar-track { background: transparent; }
+#leo-game-overlay .leo-lb-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 200, 255, 0.4);
+  border-radius: 4px;
+}
+#leo-game-overlay .leo-lb-row {
+  color: #cce6ff;
+  border-bottom: 1px solid rgba(0, 200, 255, 0.08);
+  transition: background 0.15s;
+}
+#leo-game-overlay .leo-lb-row:hover { background: rgba(0, 200, 255, 0.06); }
+#leo-game-overlay .leo-lb-row.me {
+  background: rgba(0, 230, 200, 0.18);
+  border: 1px solid rgba(0, 255, 200, 0.5);
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 700;
+}
+#leo-game-overlay .leo-lb-rank {
+  font-weight: 700;
+  color: #ffd24a;
+  text-align: center;
+}
+#leo-game-overlay .leo-lb-pseudo {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#leo-game-overlay .leo-lb-score {
+  text-align: right;
+  color: #00e5ff;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+#leo-game-overlay .leo-lb-time,
+#leo-game-overlay .leo-lb-lvl {
+  text-align: right;
+  color: #aaccff;
+  font-variant-numeric: tabular-nums;
+}
+#leo-game-overlay .leo-lb-empty,
+#leo-game-overlay .leo-lb-loading {
+  text-align: center;
+  color: #aaccff;
+  padding: 40px 10px;
+  font-style: italic;
+}
+
+/* ===== Formulaire d'envoi de score ===== */
+#leo-game-overlay .leo-submit {
+  margin: 18px auto 0;
+  max-width: 380px;
+  width: 100%;
+}
+#leo-game-overlay .leo-submit label {
+  display: block;
+  font-size: 13px;
+  color: #aaccff;
+  margin-bottom: 6px;
+  text-align: left;
+}
+#leo-game-overlay .leo-submit-row {
+  display: flex;
+  gap: 8px;
+}
+#leo-game-overlay .leo-submit input {
+  flex: 1;
+  background: rgba(0, 0, 30, 0.7);
+  border: 1px solid rgba(0, 200, 255, 0.5);
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+}
+#leo-game-overlay .leo-submit input:focus {
+  border-color: #00e5ff;
+  box-shadow: 0 0 8px rgba(0, 200, 255, 0.5);
+}
+#leo-game-overlay .leo-submit button {
+  background: rgba(0, 200, 255, 0.2);
+  border: 1px solid rgba(0, 200, 255, 0.6);
+  color: #00e5ff;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+#leo-game-overlay .leo-submit button:hover:not(:disabled) {
+  background: rgba(0, 200, 255, 0.35);
+}
+#leo-game-overlay .leo-submit button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+#leo-game-overlay .leo-submit-msg {
+  margin: 8px 0 0;
+  font-size: 13px;
+  min-height: 18px;
+  color: #aaccff;
+}
+#leo-game-overlay .leo-submit-msg.ok { color: #00ffaa; }
+#leo-game-overlay .leo-submit-msg.err { color: #ff7788; }
