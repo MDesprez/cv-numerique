@@ -461,7 +461,7 @@
         <p>Astrophysique et découvertes</p>
       </div>
 
-      <div class="interest-card">
+      <div class="interest-card" id="paleo-card" title="...">
         <div class="icon">🦖</div>
         <h3>Paléontologie</h3>
         <p>Histoire naturelle & Évolution du vivant</p>
@@ -515,6 +515,176 @@
     });
   </script>
   <script src="js/space_shooter.js"></script>
+
+  <style>
+    #raptor-easter {
+      position: absolute;
+      left: 0;
+      pointer-events: none;
+      z-index: -2;
+      opacity: 0.9;
+      will-change: transform;
+      transform: translateX(-110%);
+    }
+    #raptor-easter.run {
+      animation: raptor-walk 9s linear forwards;
+    }
+    #raptor-easter img {
+      display: block;
+      height: 100%;
+      width: auto;
+    }
+    @keyframes raptor-walk {
+      from { transform: translateX(-110%); }
+      to   { transform: translateX(calc(100vw + 10%)); }
+    }
+
+    #raptor-grass {
+      position: absolute;
+      left: 0;
+      right: 0;
+      pointer-events: none;
+      z-index: -1;
+      overflow: visible;
+    }
+    .grass-blade {
+      position: absolute;
+      bottom: 0;
+      transform-origin: bottom center;
+      border-radius: 50% 50% 30% 30% / 80% 80% 20% 20%;
+      box-shadow: inset -1px 0 0 rgba(0,0,0,0.18);
+      height: 0;
+      transition: height 600ms cubic-bezier(.2,.8,.3,1.2),
+                  transform 280ms cubic-bezier(.4,.0,.4,1);
+    }
+    .grass-blade.trampled {
+      transform: rotate(75deg) scaleY(0.35);
+      transition: transform 180ms ease-out;
+    }
+  </style>
+  <script>
+    (function () {
+      const paleo = document.getElementById('paleo-card');
+      if (!paleo) return;
+      paleo.style.cursor = 'pointer';
+
+      const N = 29;
+      const frames = Array.from({ length: N }, (_, i) =>
+        `img/dino/raptor/raptor_${String(i).padStart(2, '0')}.png`
+      );
+      const preloaded = frames.map(src => { const im = new Image(); im.src = src; return im; });
+
+      const greens = [
+        '#14401a', '#1f5a26', '#28691f', '#2d7a35', '#367a2a',
+        '#3f9a44', '#4ea83b', '#5cba55', '#6cc24a', '#7ccf52',
+        '#82d56b', '#9ad97a', '#a7e07f', '#b8e88c', '#c8efa0',
+        '#4a8c2c', '#3a7d3a', '#56a046', '#74b85a', '#8fc775'
+      ];
+      const DURATION = 9000;
+
+      let running = false;
+      paleo.addEventListener('click', () => {
+        if (running) return;
+        running = true;
+
+        const projets = document.getElementById('projets');
+        const interets = document.getElementById('interets');
+        const footer = document.querySelector('footer');
+        const projetsBottom = projets.offsetTop + projets.offsetHeight;
+        const interetsBottom = interets.offsetTop + interets.offsetHeight;
+        const footerBottom = footer.offsetTop + footer.offsetHeight;
+        const height = Math.max(120, footerBottom - projetsBottom);
+
+        const wrap = document.createElement('div');
+        wrap.id = 'raptor-easter';
+        wrap.style.top = projetsBottom + 'px';
+        wrap.style.height = height + 'px';
+
+        const img = document.createElement('img');
+        img.src = frames[0];
+        wrap.appendChild(img);
+        document.body.appendChild(wrap);
+
+        // --- herbes ---
+        const grassMaxH = Math.max(40, footerBottom - interetsBottom);
+        const grassTop = footerBottom - grassMaxH;
+        const grass = document.createElement('div');
+        grass.id = 'raptor-grass';
+        grass.style.top = grassTop + 'px';
+        grass.style.height = grassMaxH + 'px';
+        document.body.appendChild(grass);
+
+        const pageW = document.documentElement.scrollWidth;
+        const vw = window.innerWidth;
+        // largeur réelle du raptor (image rendue)
+        const raptorW = img.naturalWidth && img.naturalHeight
+          ? height * (img.naturalWidth / img.naturalHeight)
+          : 1589;
+        // x du milieu du raptor en fonction de t [0..1]
+        const xAt = (t) => -1.1 * raptorW + (vw + 2.2 * raptorW) * t + raptorW / 2;
+        const tForX = (bx) => {
+          const t = (bx + 1.1 * raptorW - raptorW / 2) / (vw + 2.2 * raptorW);
+          return Math.max(0, Math.min(1, t));
+        };
+
+        const blades = [];
+        const nBlades = Math.max(120, Math.floor(pageW / 5));
+        for (let i = 0; i < nBlades; i++) {
+          const bx = Math.random() * pageW;
+          const targetH = Math.round(grassMaxH * (0.35 + Math.random() * 0.65));
+          const w = 3 + Math.random() * 4;
+          const color = greens[Math.floor(Math.random() * greens.length)];
+          const b = document.createElement('div');
+          b.className = 'grass-blade';
+          b.style.left = (bx - w / 2) + 'px';
+          b.style.width = w + 'px';
+          b.style.background = `linear-gradient(to top, ${color}, ${color} 60%, rgba(255,255,255,0.15))`;
+          // léger tilt naturel
+          const tilt = (Math.random() * 10 - 5).toFixed(1);
+          b.dataset.rest = `rotate(${tilt}deg)`;
+          b.style.transform = b.dataset.rest;
+          grass.appendChild(b);
+          blades.push({ el: b, x: bx, h: targetH });
+        }
+
+        // pousser les brins
+        blades.forEach((bl) => {
+          setTimeout(() => { bl.el.style.height = bl.h + 'px'; }, Math.random() * 500);
+        });
+
+        // pour chaque brin, planifier le piétinement quand le raptor passe au dessus
+        blades.forEach((bl) => {
+          const delay = tForX(bl.x) * DURATION;
+          setTimeout(() => {
+            bl.el.classList.add('trampled');
+            setTimeout(() => {
+              bl.el.classList.remove('trampled');
+              bl.el.style.transform = bl.el.dataset.rest;
+            }, 500 + Math.random() * 200);
+          }, delay);
+        });
+
+        void wrap.offsetWidth;
+        wrap.classList.add('run');
+
+        let f = 0;
+        const interval = setInterval(() => {
+          f = (f + 1) % N;
+          img.src = frames[f];
+        }, 200);
+
+        wrap.addEventListener('animationend', () => {
+          clearInterval(interval);
+          wrap.remove();
+          // l'herbe redescend
+          blades.forEach((bl) => {
+            setTimeout(() => { bl.el.style.height = '0px'; }, Math.random() * 700);
+          });
+          setTimeout(() => { grass.remove(); running = false; }, 1600);
+        });
+      });
+    })();
+  </script>
 
 </body>
 </html>
