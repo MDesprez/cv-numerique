@@ -696,7 +696,6 @@
       this.malSpawnAcc += dt;
       const PU_INTERVAL = 14;   // toutes ~14s, tentative
       // cadence des malus accélérée selon le nombre de power-ups au cap (hors bouclier)
-      const ef = this.player.effects;
       const maxedCount =
         (ef.doubleStacks >= 3 ? 1 : 0) +
         (ef.rapidStacks  >= 3 ? 1 : 0) +
