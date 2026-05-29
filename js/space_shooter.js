@@ -370,6 +370,7 @@
         x: this.W / 2,
         y: this.H - 70,
         w: 48, h: 48,
+        hitW: 30, hitH: 34,
         speed: 320,
         cooldown: 0,
         invuln: 0,
@@ -891,8 +892,11 @@
       } else {
         pool = [{ k: 'doubleShot', sprite: 'puDouble' },
                 { k: 'rapidFire', sprite: 'puRapid' },
-                { k: 'shield', sprite: 'puShield' },
                 { k: 'speed', sprite: 'puSpeed' }];
+        // le bouclier ne peut tomber que si le joueur n'en a pas déjà un actif
+        if (!this.player.effects.shield) {
+          pool.push({ k: 'shield', sprite: 'puShield' });
+        }
       }
       const choice = pool[Math.floor(Math.random() * pool.length)];
       this.pickups.push({
