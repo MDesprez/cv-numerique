@@ -524,20 +524,22 @@
       pointer-events: none;
       z-index: -2;
       opacity: 0.9;
-      will-change: transform;
+      will-change: transform, background-position;
       transform: translateX(-110%);
+      background-repeat: no-repeat;
+      background-position: 0 0;
     }
     #raptor-easter.run {
-      animation: raptor-walk 9s linear forwards;
-    }
-    #raptor-easter img {
-      display: block;
-      height: 100%;
-      width: auto;
+      animation:
+        raptor-walk 9s linear forwards,
+        raptor-cycle 5.8s steps(29) infinite;
     }
     @keyframes raptor-walk {
       from { transform: translateX(-110%); }
       to   { transform: translateX(calc(100vw + 10%)); }
+    }
+    @keyframes raptor-cycle {
+      to { background-position-x: var(--sheet-end); }
     }
 
     #raptor-grass {
@@ -547,19 +549,21 @@
       pointer-events: none;
       z-index: -1;
       overflow: visible;
+      contain: layout style paint;
     }
     .grass-blade {
       position: absolute;
       bottom: 0;
       transform-origin: bottom center;
       border-radius: 50% 50% 30% 30% / 80% 80% 20% 20%;
-      box-shadow: inset -1px 0 0 rgba(0,0,0,0.18);
-      height: 0;
-      transition: height 600ms cubic-bezier(.2,.8,.3,1.2),
-                  transform 280ms cubic-bezier(.4,.0,.4,1);
+      transform: rotate(var(--tilt, 0deg)) scaleY(0);
+      transition: transform 520ms cubic-bezier(.2,.8,.3,1.2);
+    }
+    .grass-blade.grown {
+      transform: rotate(var(--tilt, 0deg)) scaleY(1);
     }
     .grass-blade.trampled {
-      transform: rotate(75deg) scaleY(0.35);
+      transform: rotate(70deg) scaleY(0.35);
       transition: transform 180ms ease-out;
     }
   </style>
@@ -569,11 +573,9 @@
       if (!paleo) return;
       paleo.style.cursor = 'pointer';
 
-      const N = 29;
-      const frames = Array.from({ length: N }, (_, i) =>
-        `img/dino/raptor/raptor_${String(i).padStart(2, '0')}.png`
-      );
-      const preloaded = frames.map(src => { const im = new Image(); im.src = src; return im; });
+      // sprite sheet : 29 frames de 560×215, sheet 16240×215
+      const SHEET = 'img/dino/raptor_sheet.webp';
+      const FRAME_W = 560, FRAME_H = 215, SHEET_W = 16240;
 
       const greens = [
         '#14401a', '#1f5a26', '#28691f', '#2d7a35', '#367a2a',
@@ -595,15 +597,19 @@
         const interetsBottom = interets.offsetTop + interets.offsetHeight;
         const footerBottom = footer.offsetTop + footer.offsetHeight;
         const height = Math.max(120, footerBottom - projetsBottom);
+        const scale = height / FRAME_H;
+        const renderedFrameW = FRAME_W * scale;
+        const renderedSheetW = SHEET_W * scale;
 
+        // --- raptor : un seul div, sprite sheet animé via CSS steps()
         const wrap = document.createElement('div');
         wrap.id = 'raptor-easter';
         wrap.style.top = projetsBottom + 'px';
+        wrap.style.width = renderedFrameW + 'px';
         wrap.style.height = height + 'px';
-
-        const img = document.createElement('img');
-        img.src = frames[0];
-        wrap.appendChild(img);
+        wrap.style.backgroundImage = `url(${SHEET})`;
+        wrap.style.backgroundSize = `${renderedSheetW}px ${height}px`;
+        wrap.style.setProperty('--sheet-end', `-${renderedSheetW}px`);
         document.body.appendChild(wrap);
 
         // --- herbes ---
@@ -617,71 +623,77 @@
 
         const pageW = document.documentElement.scrollWidth;
         const vw = window.innerWidth;
-        // largeur réelle du raptor (image rendue)
-        const raptorW = img.naturalWidth && img.naturalHeight
-          ? height * (img.naturalWidth / img.naturalHeight)
-          : 1589;
-        // x du milieu du raptor en fonction de t [0..1]
-        const xAt = (t) => -1.1 * raptorW + (vw + 2.2 * raptorW) * t + raptorW / 2;
+        const raptorW = renderedFrameW;
+        // t [0..1] où le milieu du raptor atteint bx
         const tForX = (bx) => {
           const t = (bx + 1.1 * raptorW - raptorW / 2) / (vw + 2.2 * raptorW);
           return Math.max(0, Math.min(1, t));
         };
 
+        // densité réduite : ~/3 par rapport à avant
+        const nBlades = Math.min(200, Math.max(80, Math.floor(pageW / 14)));
         const blades = [];
-        const nBlades = Math.max(120, Math.floor(pageW / 5));
+        const frag = document.createDocumentFragment();
         for (let i = 0; i < nBlades; i++) {
           const bx = Math.random() * pageW;
           const targetH = Math.round(grassMaxH * (0.35 + Math.random() * 0.65));
           const w = 3 + Math.random() * 4;
-          const color = greens[Math.floor(Math.random() * greens.length)];
+          const color = greens[(Math.random() * greens.length) | 0];
+          const tilt = (Math.random() * 10 - 5).toFixed(1);
           const b = document.createElement('div');
           b.className = 'grass-blade';
-          b.style.left = (bx - w / 2) + 'px';
-          b.style.width = w + 'px';
-          b.style.background = `linear-gradient(to top, ${color}, ${color} 60%, rgba(255,255,255,0.15))`;
-          // léger tilt naturel
-          const tilt = (Math.random() * 10 - 5).toFixed(1);
-          b.dataset.rest = `rotate(${tilt}deg)`;
-          b.style.transform = b.dataset.rest;
-          grass.appendChild(b);
-          blades.push({ el: b, x: bx, h: targetH });
+          b.style.cssText =
+            `left:${(bx - w / 2).toFixed(1)}px;` +
+            `width:${w.toFixed(1)}px;` +
+            `height:${targetH}px;` +
+            `background:${color};` +
+            `--tilt:${tilt}deg;`;
+          frag.appendChild(b);
+          blades.push({
+            el: b,
+            growAt: Math.random() * 500,
+            trampleAt: tForX(bx) * DURATION,
+            restoreAt: 0, // calculé après
+            retractAt: 0, // calculé à animationend
+          });
         }
+        grass.appendChild(frag);
 
-        // pousser les brins
-        blades.forEach((bl) => {
-          setTimeout(() => { bl.el.style.height = bl.h + 'px'; }, Math.random() * 500);
-        });
+        // précalcul restoreAt
+        blades.forEach(bl => { bl.restoreAt = bl.trampleAt + 500 + Math.random() * 200; });
 
-        // pour chaque brin, planifier le piétinement quand le raptor passe au dessus
-        blades.forEach((bl) => {
-          const delay = tForX(bl.x) * DURATION;
-          setTimeout(() => {
-            bl.el.classList.add('trampled');
-            setTimeout(() => {
-              bl.el.classList.remove('trampled');
-              bl.el.style.transform = bl.el.dataset.rest;
-            }, 500 + Math.random() * 200);
-          }, delay);
-        });
-
+        // démarrer l'animation du raptor (sprite + translate)
         void wrap.offsetWidth;
         wrap.classList.add('run');
 
-        let f = 0;
-        const interval = setInterval(() => {
-          f = (f + 1) % N;
-          img.src = frames[f];
-        }, 200);
+        // horloge unique rAF — orchestration pousse / piétinement / restauration
+        const t0 = performance.now();
+        let phase = 'walk'; // 'walk' → 'retract' → 'done'
+        const tick = (now) => {
+          const t = now - t0;
+          for (let i = 0; i < blades.length; i++) {
+            const bl = blades[i];
+            const cls = bl.el.classList;
+            if (!bl.grown && t >= bl.growAt) { cls.add('grown'); bl.grown = true; }
+            if (phase === 'walk') {
+              if (!bl.trampled && t >= bl.trampleAt) { cls.add('trampled'); bl.trampled = true; }
+              if (bl.trampled && !bl.restored && t >= bl.restoreAt) { cls.remove('trampled'); bl.restored = true; }
+            } else if (phase === 'retract') {
+              if (!bl.retracting && t >= bl.retractAt) { cls.remove('grown'); bl.retracting = true; }
+            }
+          }
+          if (phase !== 'done') requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
 
-        wrap.addEventListener('animationend', () => {
-          clearInterval(interval);
+        wrap.addEventListener('animationend', (ev) => {
+          if (ev.animationName !== 'raptor-walk') return;
           wrap.remove();
-          // l'herbe redescend
-          blades.forEach((bl) => {
-            setTimeout(() => { bl.el.style.height = '0px'; }, Math.random() * 700);
-          });
-          setTimeout(() => { grass.remove(); running = false; }, 1600);
+          // phase retrait : étalement 0–700 ms depuis maintenant
+          const tNow = performance.now() - t0;
+          blades.forEach(bl => { bl.retractAt = tNow + Math.random() * 700; });
+          phase = 'retract';
+          setTimeout(() => { grass.remove(); phase = 'done'; running = false; }, 1700);
         });
       });
     })();

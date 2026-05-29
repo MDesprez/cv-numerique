@@ -62,11 +62,11 @@
       const isHL = highlight && r.pseudo === highlight.pseudo && r.score === highlight.score && r.time_seconds === highlight.timeSeconds;
       const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : `#${rank}`;
       return `<div class="leo-lb-row${isHL ? ' me' : ''}">
-        <span class="leo-lb-rank">${medal}</span>
-        <span class="leo-lb-pseudo">${escapeHTML(r.pseudo)}</span>
-        <span class="leo-lb-score">${r.score.toLocaleString('fr-FR')}</span>
-        <span class="leo-lb-time">${fmtTime(r.time_seconds)}</span>
-        <span class="leo-lb-lvl">Lv ${r.level_reached}</span>
+        <div class="leo-lb-rank">${medal}</div>
+        <div class="leo-lb-pseudo">${escapeHTML(r.pseudo)}</div>
+        <div class="leo-lb-score">${r.score.toLocaleString('fr-FR')}</div>
+        <div class="leo-lb-time">${fmtTime(r.time_seconds)}</div>
+        <div class="leo-lb-lvl">Lv ${r.level_reached}</div>
       </div>`;
     }).join('');
   }
@@ -297,11 +297,11 @@
         <button class="leo-lb-close" title="Fermer">✕</button>
         <h2>🏆 CLASSEMENT — TOP 100</h2>
         <div class="leo-lb-head">
-          <span class="leo-lb-rank">#</span>
-          <span class="leo-lb-pseudo">Pseudo</span>
-          <span class="leo-lb-score">Score</span>
-          <span class="leo-lb-time">Temps</span>
-          <span class="leo-lb-lvl">Niv.</span>
+          <div class="leo-lb-rank">#</div>
+          <div class="leo-lb-pseudo">Pseudo</div>
+          <div class="leo-lb-score">Score</div>
+          <div class="leo-lb-time">Temps</div>
+          <div class="leo-lb-lvl">Niv.</div>
         </div>
         <div class="leo-lb-list" id="leo-lb-list">
           <div class="leo-lb-loading">Chargement…</div>
@@ -997,11 +997,11 @@
               <button class="leo-lb-close" title="Fermer">✕</button>
               <h2>🏆 CLASSEMENT — TOP 100</h2>
               <div class="leo-lb-head">
-                <span class="leo-lb-rank">#</span>
-                <span class="leo-lb-pseudo">Pseudo</span>
-                <span class="leo-lb-score">Score</span>
-                <span class="leo-lb-time">Temps</span>
-                <span class="leo-lb-lvl">Niv.</span>
+                <div class="leo-lb-rank">#</div>
+                <div class="leo-lb-pseudo">Pseudo</div>
+                <div class="leo-lb-score">Score</div>
+                <div class="leo-lb-time">Temps</div>
+                <div class="leo-lb-lvl">Niv.</div>
               </div>
               <div class="leo-lb-list" id="leo-lb-list">
                 <div class="leo-lb-loading">Chargement…</div>
