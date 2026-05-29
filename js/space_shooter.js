@@ -695,7 +695,17 @@
       this.puSpawnAcc += dt;
       this.malSpawnAcc += dt;
       const PU_INTERVAL = 14;   // toutes ~14s, tentative
-      const MAL_INTERVAL = 28;  // toutes ~28s, tentative
+      // cadence des malus accélérée selon le nombre de power-ups au cap (hors bouclier)
+      const ef = this.player.effects;
+      const maxedCount =
+        (ef.doubleStacks >= 3 ? 1 : 0) +
+        (ef.rapidStacks  >= 3 ? 1 : 0) +
+        (ef.speedMul     >= 2 ? 1 : 0);
+      const malusMul = maxedCount === 0 ? 1
+                     : maxedCount === 1 ? 1.1
+                     : maxedCount === 2 ? 1.2
+                     :                    1.4;
+      const MAL_INTERVAL = 28 / malusMul;
       if (this.puSpawnAcc >= PU_INTERVAL) {
         this.puSpawnAcc = 0;
         if (Math.random() < 0.7) this.spawnPickup(false);
@@ -890,12 +900,17 @@
           pool.push({ k: 'divide', sprite: 'malDivide' }); // poids accru
         }
       } else {
-        pool = [{ k: 'doubleShot', sprite: 'puDouble' },
-                { k: 'rapidFire', sprite: 'puRapid' },
-                { k: 'speed', sprite: 'puSpeed' }];
-        // le bouclier ne peut tomber que si le joueur n'en a pas déjà un actif
-        if (!this.player.effects.shield) {
-          pool.push({ k: 'shield', sprite: 'puShield' });
+        // chaque power-up est exclu du pool s'il est déjà au cap
+        const ef = this.player.effects;
+        pool = [];
+        if (ef.doubleStacks < 3) pool.push({ k: 'doubleShot', sprite: 'puDouble' });
+        if (ef.rapidStacks < 3)  pool.push({ k: 'rapidFire',  sprite: 'puRapid' });
+        if (!ef.shield)          pool.push({ k: 'shield',     sprite: 'puShield' });
+        if (ef.speedMul < 2)     pool.push({ k: 'speed',      sprite: 'puSpeed' });
+        // tous au max → un malus prend la place (montée de difficulté fin de partie)
+        if (pool.length === 0) {
+          this.spawnPickup(true);
+          return;
         }
       }
       const choice = pool[Math.floor(Math.random() * pool.length)];
