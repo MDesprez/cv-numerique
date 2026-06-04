@@ -20,7 +20,7 @@
         'Prefer': 'return=minimal',
       },
       body: JSON.stringify({
-        pseudo: pseudo.slice(0, 12),
+        pseudo: pseudo.slice(0, 20),
         score: Math.max(0, Math.floor(score)),
         time_seconds: Math.max(0, Math.floor(timeSeconds)),
         level_reached: Math.max(1, Math.floor(levelReached)),
@@ -591,7 +591,7 @@
       this.bullets = this.bullets.filter((b) => b.y > -20);
 
       // spawn ennemis
-      const spawnInterval = Math.max(0.3, 1.2 - this.difficulty * 0.08);
+      const spawnInterval = Math.max(0.08, 1.2 - this.difficulty * 0.08);
       this.spawnAcc += dt;
       if (this.spawnAcc >= spawnInterval && this.enemies.length < 40) {
         this.spawnAcc = 0;
@@ -632,7 +632,7 @@
                 w: 18, h: 28, aimed: true,
               });
             }
-            e.shootT = Math.max(0.8, 1.8 - this.difficulty * 0.06);
+            e.shootT = Math.max(0.6, 1.8 - this.difficulty * 0.06);
           }
         } else if (e.type === 'elite') {
           // descend lentement, drift latéral, tire une carapace visée (cadence lente)
@@ -655,7 +655,7 @@
               frame: 0,
               frameT: 0,
             });
-            e.shootT = Math.max(1.6, 3.2 - this.difficulty * 0.08);
+            e.shootT = Math.max(1.44, 3.2 - this.difficulty * 0.08);
           }
         }
       }
@@ -789,8 +789,8 @@
       // Boss : à partir du niveau 10, au moins 1 garanti par niveau, taux croissant ensuite.
       if (d >= 10 && !bossAlive) {
         const guaranteed = d > this.lastBossLevel;
-        // taux : 4% au lvl 10, +1% par niveau au-delà (cap 12%)
-        const chance = Math.min(0.12, 0.04 + (d - 10) * 0.01);
+        // taux : 4% au lvl 10, +1% par niveau au-delà (cap 14% au lvl 20)
+        const chance = Math.min(0.14, 0.04 + (d - 10) * 0.01);
         if (guaranteed || Math.random() < chance) {
           const hp = 24 + (d - 10) * 4;
           this.enemies.push({
@@ -962,9 +962,9 @@
         <p>Temps de survie : <b style="color:#00e5ff;">${mm}:${ss}</b></p>
         <p>Niveau atteint : <b style="color:#00e5ff;">${this.difficulty}</b></p>
         <div class="leo-submit" id="leo-submit">
-          <label for="leo-pseudo">Ton pseudo (max 12) :</label>
+          <label for="leo-pseudo">Ton pseudo (max 20) :</label>
           <div class="leo-submit-row">
-            <input type="text" id="leo-pseudo" maxlength="12" placeholder="PILOTE" value="${escapeHTML(savedPseudo)}" autocomplete="off">
+            <input type="text" id="leo-pseudo" maxlength="20" placeholder="PILOTE" value="${escapeHTML(savedPseudo)}" autocomplete="off">
             <button id="leo-submit-btn">Enregistrer mon score</button>
           </div>
           <p class="leo-submit-msg" id="leo-submit-msg"></p>
@@ -994,7 +994,7 @@
       const onSubmit = async () => {
         const pseudo = (input.value || '').trim();
         if (pseudo.length < 1) {
-          msg.textContent = 'Entre un pseudo (1 à 12 caractères).';
+          msg.textContent = 'Entre un pseudo (1 à 20 caractères).';
           msg.className = 'leo-submit-msg err';
           return;
         }
